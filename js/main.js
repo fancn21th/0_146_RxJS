@@ -1,7 +1,19 @@
-const source = Rx.Observable.interval(1000)
-  .take(4)
-  .map((i) => ["1", "2", "foo", "3"][i]);
+var button = document.querySelector("button");
+var label = document.querySelector("h4");
 
-const result = source.map((x) => parseInt(x)).filter((x) => !isNaN(x));
+label.textContent = "准备好双击...";
 
-result.subscribe((x) => console.log(x));
+var clickStream = Rx.Observable.fromEvent(button, "click");
+
+var doubleClickStream = clickStream
+  .bufferWhen(() => clickStream.debounceTime(250))
+  .map((arr) => arr.length)
+  .filter((len) => len === 2);
+
+doubleClickStream.subscribe((event) => {
+  label.textContent = "双击成功!";
+});
+
+doubleClickStream.delay(1000).subscribe((suggestion) => {
+  label.textContent = "准备好双击...";
+});
