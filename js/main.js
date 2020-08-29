@@ -1,7 +1,14 @@
-const source = Rx.Observable.interval(1000)
-  .take(4)
-  .map((i) => ["1", "2", "foo", "3"][i]);
+// It allows you to specify the dynamic behavior of a value completely at the time of declaration
 
-const result = source.map((x) => parseInt(x)).filter((x) => !isNaN(x));
+/*
+  const a = 3
+  const b = a * 5
 
-result.subscribe((x) => console.log(x));
+  a = 4
+  however variable b won't change accordingly
+*/
+
+const streamA = Rx.Observable.of(3, 4, 5, 6);
+const streamB = streamA.map((a) => 10 * a);
+
+streamB.subscribe((b) => console.log(b));
